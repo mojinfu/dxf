@@ -1,7 +1,8 @@
 package entity
 
 import (
-	"github.com/yofu/dxf/format"
+	"github.com/mojinfu/dxf/format"
+	"github.com/mojinfu/point"
 )
 
 // Polyline represents POLYLINE Entity.
@@ -100,4 +101,15 @@ func (p *Polyline) BBox() ([]float64, []float64) {
 		}
 	}
 	return mins, maxs
+}
+
+func (p *Polyline) Poly() []*point.Point {
+	poly := []*point.Point{}
+	for i := range p.Vertices {
+		poly = append(poly, &point.Point{
+			X: p.Vertices[i].Coord[0],
+			Y: p.Vertices[i].Coord[1],
+		})
+	}
+	return poly
 }

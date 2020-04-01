@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yofu/dxf/color"
-	"github.com/yofu/dxf/insunit"
-	"github.com/yofu/dxf/table"
+	"github.com/mojinfu/dxf/color"
+	"github.com/mojinfu/dxf/insunit"
+	"github.com/mojinfu/dxf/table"
 
-	"github.com/yofu/dxf/drawing"
-	"github.com/yofu/dxf/entity"
+	"github.com/mojinfu/dxf/drawing"
+	"github.com/mojinfu/dxf/entity"
 )
 
 // TOLERANCE is the epsilon value used in comparing floats.

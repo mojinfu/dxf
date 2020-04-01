@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/yofu/dxf/format"
+	"github.com/mojinfu/dxf/format"
 )
 
 // ThreeDFace represents 3DFACE Entity.

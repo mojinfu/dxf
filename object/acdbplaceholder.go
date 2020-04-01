@@ -1,8 +1,8 @@
 package object
 
 import (
-	"github.com/yofu/dxf/format"
-	"github.com/yofu/dxf/handle"
+	"github.com/mojinfu/dxf/format"
+	"github.com/mojinfu/dxf/handle"
 )
 
 // AcDbPlaceHolder represents ACDBPLACEHOLDER Object.

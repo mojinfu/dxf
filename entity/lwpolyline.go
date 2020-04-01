@@ -1,7 +1,8 @@
 package entity
 
 import (
-	"github.com/yofu/dxf/format"
+	"github.com/mojinfu/dxf/format"
+	"github.com/mojinfu/point"
 )
 
 // LwPolyline represents LWPOLYLINE Entity.
@@ -10,6 +11,7 @@ type LwPolyline struct {
 	Num      int // 90
 	Closed   bool
 	Vertices [][]float64
+	Bulges   []float64
 }
 
 // IsEntity is for Entity interface.
@@ -20,6 +22,7 @@ func (l *LwPolyline) IsEntity() bool {
 // NewLwPolyline creates a new LwPolyline.
 func NewLwPolyline(size int) *LwPolyline {
 	vs := make([][]float64, size)
+	bulges := make([]float64, size)
 	for i := 0; i < size; i++ {
 		vs[i] = make([]float64, 2)
 	}
@@ -28,6 +31,7 @@ func NewLwPolyline(size int) *LwPolyline {
 		Num:      size,
 		Closed:   false,
 		Vertices: vs,
+		Bulges:   bulges,
 	}
 	return l
 }
@@ -80,4 +84,24 @@ func (l *LwPolyline) BBox() ([]float64, []float64) {
 		}
 	}
 	return mins, maxs
+}
+func (l *LwPolyline) Poly() []*point.Point {
+	poly := []*point.Point{}
+	for i := range l.Vertices {
+		//log.Println(len(l.Vertices[i]))
+		if i == len(l.Vertices)-1 {
+			//nest.Bulge2Arc(&point.Point{X: 0, Y: 0}, &point.Point{X: 100, Y: 0}, -0.4143)
+		} else {
+			pointA := &point.Point{
+				X: l.Vertices[i][0],
+				Y: l.Vertices[i][1],
+			}
+			pointB := &point.Point{
+				X: l.Vertices[i+1][0],
+				Y: l.Vertices[i+1][1],
+			}
+			poly = append(poly, point.Bulge2Arc(pointA, pointB, l.Bulges[i])...)
+		}
+	}
+	return poly
 }

@@ -8,15 +8,15 @@ import (
 	"io"
 	"os"
 
-	"github.com/yofu/dxf/block"
-	"github.com/yofu/dxf/class"
-	"github.com/yofu/dxf/color"
-	"github.com/yofu/dxf/entity"
-	"github.com/yofu/dxf/format"
-	"github.com/yofu/dxf/handle"
-	"github.com/yofu/dxf/header"
-	"github.com/yofu/dxf/object"
-	"github.com/yofu/dxf/table"
+	"github.com/mojinfu/dxf/block"
+	"github.com/mojinfu/dxf/class"
+	"github.com/mojinfu/dxf/color"
+	"github.com/mojinfu/dxf/entity"
+	"github.com/mojinfu/dxf/format"
+	"github.com/mojinfu/dxf/handle"
+	"github.com/mojinfu/dxf/header"
+	"github.com/mojinfu/dxf/object"
+	"github.com/mojinfu/dxf/table"
 )
 
 // Drawing contains DXF drawing data.
@@ -273,6 +273,31 @@ func (d *Drawing) LwPolyline(closed bool, vertices ...[]float64) (*entity.LwPoly
 	for i := 0; i < size; i++ {
 		l.Vertices[i] = vertices[i]
 	}
+	if closed {
+		l.Close()
+	}
+	l.SetLayer(d.CurrentLayer)
+	d.AddEntity(l)
+	return l, nil
+}
+func (d *Drawing) LwPolylineWithBulges(closed bool, vertices [][]float64, bulges []float64) (*entity.LwPolyline, error) {
+	if len(bulges) > len(vertices) {
+		return nil, errors.New("bulges is too long")
+	}
+	size := len(vertices)
+	l := entity.NewLwPolyline(size)
+	for i := 0; i < size; i++ {
+		l.Vertices[i] = vertices[i]
+	}
+
+	for i := 0; i < size; i++ {
+		if len(bulges)-1 >= i {
+			l.Bulges[i] = bulges[i]
+		} else {
+			l.Bulges[i] = 0
+		}
+	}
+
 	if closed {
 		l.Close()
 	}

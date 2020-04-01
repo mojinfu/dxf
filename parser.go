@@ -6,13 +6,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/yofu/dxf/block"
-	"github.com/yofu/dxf/color"
-	"github.com/yofu/dxf/drawing"
-	"github.com/yofu/dxf/entity"
-	"github.com/yofu/dxf/header"
-	"github.com/yofu/dxf/insunit"
-	"github.com/yofu/dxf/table"
+	"github.com/mojinfu/dxf/block"
+	"github.com/mojinfu/dxf/color"
+	"github.com/mojinfu/dxf/drawing"
+	"github.com/mojinfu/dxf/entity"
+	"github.com/mojinfu/dxf/header"
+	"github.com/mojinfu/dxf/insunit"
+	"github.com/mojinfu/dxf/table"
 )
 
 // setFloat sets a floating point number to a variable using given function.
@@ -708,6 +708,7 @@ func ParseLwPolyline(d *drawing.Drawing, data [][2]string) (entity.Entity, error
 			err = setInt(dt, func(val int) {
 				lw.Num = val
 				lw.Vertices = make([][]float64, val)
+				lw.Bulges = make([]float64, val)
 				for i := 0; i < val; i++ {
 					lw.Vertices[i] = make([]float64, 2)
 				}
@@ -726,6 +727,14 @@ func ParseLwPolyline(d *drawing.Drawing, data [][2]string) (entity.Entity, error
 				err = setFloat(dt, func(val float64) {
 					lw.Vertices[ind][1] = val
 					read |= 2
+				})
+			} else {
+				err = fmt.Errorf("LWPOLYLINE extra vertices")
+			}
+		case "42":
+			if lw.Num > ind {
+				err = setFloat(dt, func(val float64) {
+					lw.Bulges[ind-1] = val
 				})
 			} else {
 				err = fmt.Errorf("LWPOLYLINE extra vertices")

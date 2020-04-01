@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/yofu/dxf/format"
+	"github.com/mojinfu/dxf/format"
 )
 
 // Spline represents LINE Entity.

@@ -1,7 +1,9 @@
 package entity
 
 import (
-	"github.com/yofu/dxf/format"
+	"github.com/mojinfu/dxf/format"
+
+	"github.com/mojinfu/point"
 )
 
 // Circle represents CIRCLE Entity.
@@ -76,4 +78,8 @@ func (c *Circle) SetCoord(co []float64) {
 func (c *Circle) BBox() ([]float64, []float64) {
 	// TODO: extrusion
 	return []float64{c.Center[0] - c.Radius, c.Center[1] - c.Radius, c.Center[2]}, []float64{c.Center[0] + c.Radius, c.Center[1] + c.Radius, c.Center[2]}
+}
+
+func (circle *Circle) Poly() []*point.Point {
+	return point.NewCircle(circle.Center[0], circle.Center[1], circle.Radius)
 }
