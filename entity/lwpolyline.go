@@ -50,6 +50,7 @@ func (l *LwPolyline) Format(f format.Formatter) {
 		for j := 0; j < 2; j++ {
 			f.WriteFloat((j+1)*10, l.Vertices[i][j])
 		}
+		f.WriteFloat(42, l.Bulges[i])
 	}
 }
 
@@ -90,7 +91,15 @@ func (l *LwPolyline) Poly() []*point.Point {
 	for i := range l.Vertices {
 		//log.Println(len(l.Vertices[i]))
 		if i == len(l.Vertices)-1 {
-			//nest.Bulge2Arc(&point.Point{X: 0, Y: 0}, &point.Point{X: 100, Y: 0}, -0.4143)
+			pointA := &point.Point{
+				X: l.Vertices[i][0],
+				Y: l.Vertices[i][1],
+			}
+			pointB := &point.Point{
+				X: l.Vertices[0][0],
+				Y: l.Vertices[0][1],
+			}
+			poly = append(poly, point.Bulge2Arc(pointA, pointB, l.Bulges[i])...)
 		} else {
 			pointA := &point.Point{
 				X: l.Vertices[i][0],

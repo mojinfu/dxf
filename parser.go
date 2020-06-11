@@ -3,6 +3,7 @@ package dxf
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -539,7 +540,7 @@ func ParseEntities(d *drawing.Drawing, line int, data [][2]string) error {
 	if len(tmpdata) > 0 {
 		e, err := ParseEntity(d, tmpdata)
 		if err != nil {
-			return fmt.Errorf("line %d: %s", line+2*len(data), err.Error())
+			log.Println(fmt.Errorf("line %d: %s", line+2*len(data), err.Error()))
 		}
 		d.AddEntity(e)
 		tmpdata = make([][2]string, 0)
@@ -583,8 +584,14 @@ func ParseEntityFunc(t string) (func(*drawing.Drawing, [][2]string) (entity.Enti
 		return ParsePoint, nil
 	case "TEXT":
 		return ParseText, nil
+	case "DIMENSION":
+		return ParseDimension, nil
+	case "INSERT":
+		return ParseInsert, nil
+	case "MTEXT":
+		return ParseMtext, nil
 	default:
-		return nil, errors.New("unknown entity type")
+		return nil, errors.New("unknown entity type:" + t)
 	}
 }
 
@@ -732,7 +739,7 @@ func ParseLwPolyline(d *drawing.Drawing, data [][2]string) (entity.Entity, error
 				err = fmt.Errorf("LWPOLYLINE extra vertices")
 			}
 		case "42":
-			if lw.Num > ind {
+			if lw.Num >= ind {
 				err = setFloat(dt, func(val float64) {
 					lw.Bulges[ind-1] = val
 				})
@@ -874,6 +881,20 @@ func ParsePoint(d *drawing.Drawing, data [][2]string) (entity.Entity, error) {
 		}
 	}
 	return p, nil
+}
+func ParseMtext(d *drawing.Drawing, data [][2]string) (entity.Entity, error) {
+	t := entity.NewMtext()
+	return t, nil
+}
+
+func ParseInsert(d *drawing.Drawing, data [][2]string) (entity.Entity, error) {
+	t := entity.NewInsert()
+	return t, nil
+}
+
+func ParseDimension(d *drawing.Drawing, data [][2]string) (entity.Entity, error) {
+	t := entity.NewDimension()
+	return t, nil
 }
 
 // ParseText parses TEXT entities.

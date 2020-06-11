@@ -46,14 +46,16 @@ func (d *Drawing) ReplacePolyline(poly *entity.Polyline, x, y float64, degrees i
 func translatePlanePoint(x, y float64, point []float64) []float64 {
 	var x1 = point[0] + x
 	var y1 = point[1] + y
-	var z1 = point[2]
-	return []float64{x1, y1, z1}
+	//var z1 = point[2]
+	//return []float64{x1, y1, z1}
+	return []float64{x1, y1}
 
 }
 func rotationPlanePoint(degrees int, point []float64) []float64 {
 	angle := float64(degrees) * math.Pi / 180
 	var x1 = point[0]*math.Cos(angle) - point[1]*math.Sin(angle)
 	var y1 = point[0]*math.Sin(angle) + point[1]*math.Cos(angle)
-	var z1 = point[2]
-	return []float64{x1, y1, z1}
+	//	var z1 = point[2]
+	return []float64{x1, y1}
+	//return []float64{x1, y1, z1}
 }

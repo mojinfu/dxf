@@ -15,6 +15,9 @@ const (
 	ARC
 	TEXT
 	SPLINE
+	DIMENSION
+	INSERT
+	MTEXT
 )
 
 // EntityTypeString converts EntityType to string.
